@@ -1,11 +1,14 @@
 package config
 
 import (
+	"backend-crs/model"
 	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/joho/godotenv"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 func LoadEnv() {
@@ -30,4 +33,19 @@ func GetDBURI() string {
 		os.Getenv("DB_NAME"),
 		os.Getenv("DB_PASSWORD"),
 	)
+}
+
+func ConnectDatabase() (*gorm.DB, error) {
+
+	db, err := gorm.Open(postgres.Open(GetDBURI()), &gorm.Config{})
+	if err != nil {
+		panic("Failed to connect to the database " + err.Error())
+	}
+
+	err = db.AutoMigrate(&model.Student{}, &model.Admin{})
+	if err != nil {
+		panic("Failed to automigrate objects " + err.Error())
+	}
+
+	return db, err
 }
