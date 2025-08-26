@@ -25,7 +25,7 @@ export const AuthProvider: React.FC<AuthProvividerProps> = ({ children }) => {
           setUser(response?.data);
           localStorage.setItem("user", JSON.stringify(user));
         } catch (err: unknown) {
-          console.log("Error while hitting '/me' ", err);
+          console.log("Error while hitting '/me' :", err);
         } finally {
         }
       };
