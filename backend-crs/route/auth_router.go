@@ -6,13 +6,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupAuthRouter(authController controller.AuthController) *gin.Engine {
+func SetupAuthRouter(authController controller.AuthController, router *gin.Engine) {
 
-	router := gin.Default()
-
-	api := router.Group("/api/student/auth")
+	studentApi := router.Group("/api/student/auth")
 	{
-		api.POST("/register", authController.RegisterStudent)
+		studentApi.POST("/register", authController.RegisterStudent)
+		studentApi.POST("/login", authController.LoginStudent)
 	}
-	return router
+	staffApi := router.Group("/api/staff/auth")
+	{
+		staffApi.POST("/register", authController.RegisterStudent)
+		staffApi.POST("/login", authController.LoginStaff)
+	}
 }

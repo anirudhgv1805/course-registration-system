@@ -49,3 +49,7 @@ func ConnectDatabase() (*gorm.DB, error) {
 
 	return db, err
 }
+
+func GetSecretKey() string {
+	return os.Getenv("JWT_SECRET_KEY");
+}

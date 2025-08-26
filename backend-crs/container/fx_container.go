@@ -3,6 +3,7 @@ package container
 import (
 	"backend-crs/config"
 	"backend-crs/controller"
+	"backend-crs/middleware"
 	"backend-crs/repository"
 	"backend-crs/route"
 	"backend-crs/service"
@@ -13,6 +14,12 @@ import (
 	"go.uber.org/fx"
 	"gorm.io/gorm"
 )
+
+func NewRouter() *gin.Engine {
+    router := gin.New()
+    router.Use(middleware.AddCorsMapping())
+    return router
+}
 
 func NewDatabase(lc fx.Lifecycle) (*gorm.DB, error) {
 	
@@ -39,6 +46,9 @@ func StartServer(r *gin.Engine) {
 var Module = fx.Module("Application Entry", fx.Provide(
 	NewDatabase,
 
+	// router
+	NewRouter,
+
 	// repositories
 	repository.NewStudentRepository,
 
@@ -48,8 +58,6 @@ var Module = fx.Module("Application Entry", fx.Provide(
 	//controllers
 	controller.NewAuthController,
 
-	//routers
+), fx.Invoke(
 	route.SetupAuthRouter,
-
-
-), fx.Invoke(StartServer))
+	StartServer))
