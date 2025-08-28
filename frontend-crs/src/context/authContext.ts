@@ -8,6 +8,9 @@ export interface AuthContextType {
     isAuthenticated : boolean;
     login : (...arg0: any[]) => any;
     logout : () => any;
+    error : string | null;
+    setError : (err : string | null) => void;
+    setUserData : (user : User) => void;
 }
 
 

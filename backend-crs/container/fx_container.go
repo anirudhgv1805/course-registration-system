@@ -4,6 +4,7 @@ import (
 	"backend-crs/config"
 	"backend-crs/controller"
 	"backend-crs/middleware"
+	"backend-crs/model"
 	"backend-crs/repository"
 	"backend-crs/route"
 	"backend-crs/service"
@@ -27,6 +28,7 @@ func NewDatabase(lc fx.Lifecycle) (*gorm.DB, error) {
 	if err != nil {
 		panic("Failed to commect to the Database "+err.Error())
 	}
+	db.AutoMigrate(&model.Staff{},&model.Student{},&model.Admin{})
 
 	lc.Append(fx.Hook{
 		OnStop: func(ctx context.Context) error {
@@ -51,9 +53,11 @@ var Module = fx.Module("Application Entry", fx.Provide(
 
 	// repositories
 	repository.NewStudentRepository,
+	repository.NewStaffRepository,
 
 	// services
 	service.NewStudentService,
+	service.NewStaffService,
 
 	//controllers
 	controller.NewAuthController,

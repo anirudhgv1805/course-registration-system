@@ -18,6 +18,10 @@ type staffService struct {
 	repo repository.StaffRepository
 }
 
+func NewStaffService(repo repository.StaffRepository) StaffService {
+	return &staffService{repo: repo}
+}
+
 func (s *staffService) FindStaffByStaffId(staffId string) (*model.Staff, error) {
 	staff, err := s.repo.FindStaffByStaffId(staffId)
 	if err != nil {
@@ -43,6 +47,8 @@ func (s *staffService) Authenticate(staffId, password string) (*dto.StaffRespons
 		IsClassAdvisor: staff.IsClassAdvisor,
 		Section:        staff.Section,
 		Batch:          staff.Batch,
+		Role:           "staff",
+		StaffId:        staff.StaffId,
 	}, nil
 }
 
@@ -63,13 +69,14 @@ func (s *staffService) RegisterStaff(staff *model.Staff) (*dto.StaffResponse, er
 	}
 
 	staffResponse := dto.StaffResponse{
-		Username: staff.Username,
-		StaffId : staff.StaffId,
-		Department: staff.Department,
-		Email: staff.Email,
-		Section: staff.Section,
-		Batch: staff.Batch,
+		Username:       staff.Username,
+		StaffId:        staff.StaffId,
+		Department:     staff.Department,
+		Email:          staff.Email,
+		Section:        staff.Section,
+		Batch:          staff.Batch,
 		IsClassAdvisor: staff.IsClassAdvisor,
+		Role:           "staff",
 	}
 
 	return &staffResponse, nil

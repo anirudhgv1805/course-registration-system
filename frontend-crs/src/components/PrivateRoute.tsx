@@ -17,8 +17,9 @@ const PrivateRoute: React.FC<Props> = ({ children }) => {
 const StudentPrivateRoute: React.FC<Props> = ({ children }) => {
     const { isAuthenticated, user } = useAuth();
 
-    if (!isAuthenticated && !(user?.role === "student")) {
-        <Navigate to={"/"} replace />;
+    if (!isAuthenticated || user?.role !== "student") {
+        console.log("triggered private route student");
+        return <Navigate to={"/"} replace />;
     }
     return <>{children}</>;
 };
@@ -26,8 +27,8 @@ const StudentPrivateRoute: React.FC<Props> = ({ children }) => {
 const StaffPrivateRoute: React.FC<Props> = ({ children }) => {
     const { isAuthenticated, user } = useAuth();
 
-    if (!isAuthenticated && !(user?.role === "staff")) {
-        <Navigate to={"/"} replace />;
+    if (!isAuthenticated || user?.role !== "staff") {
+        return <Navigate to={"/"} replace />;
     }
     return <>{children}</>;
 };

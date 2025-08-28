@@ -47,6 +47,7 @@ func (s *studentService) RegisterStudent(student *model.Student) (*dto.StudentRe
 		Email:      student.Email,
 		Section:    student.Section,
 		Batch:      student.Batch,
+		Role:       "student",
 	}
 	return &studentResponse, err
 }
@@ -75,5 +76,6 @@ func (s *studentService) Authenticate(registerNo, password string) (*dto.Student
 		Batch:      student.Batch,
 		RegisterNo: student.RegisterNo,
 		Section:    student.Section,
+		Role:       "student",
 	}, nil
 }

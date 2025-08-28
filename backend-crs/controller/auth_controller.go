@@ -12,6 +12,7 @@ import (
 
 type AuthController interface {
 	RegisterStudent(ctx *gin.Context)
+	RegisterStaff(ctx *gin.Context)
 	LoginStudent(ctx *gin.Context)
 	LoginStaff(ctx *gin.Context)
 }
@@ -21,8 +22,8 @@ type authController struct {
 	staffService   service.StaffService
 }
 
-func NewAuthController(s service.StudentService) AuthController {
-	return &authController{studentService: s}
+func NewAuthController(studentService service.StudentService, staffService service.StaffService) AuthController {
+	return &authController{studentService: studentService, staffService: staffService}
 }
 
 func (ctrl *authController) RegisterStudent(ctx *gin.Context) {
@@ -55,7 +56,7 @@ func (ctrl *authController) LoginStudent(ctx *gin.Context) {
 	if err := ctx.ShouldBindJSON(&loginData); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"status": "failed",
-			"error":  "Invalid Register Request",
+			"error":  "Invalid Login Request",
 		})
 		return
 	}
@@ -85,13 +86,12 @@ func (ctrl *authController) LoginStudent(ctx *gin.Context) {
 
 // staff related methods
 
-
 func (ctrl *authController) RegisterStaff(ctx *gin.Context) {
 	var staff model.Staff
 	if err := ctx.ShouldBindJSON(&staff); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"status": "failed",
-			"error":  "Invalid Register Request",
+			"error":  err.Error(),
 		})
 		return
 	}

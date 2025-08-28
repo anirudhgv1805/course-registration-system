@@ -15,6 +15,10 @@ type staffRepository struct {
 	db *gorm.DB
 }
 
+func NewStaffRepository(db *gorm.DB) StaffRepository {
+	return &staffRepository{db}
+}
+
 func (r *staffRepository) RegisterStaff(staff *model.Staff) error {
 	return r.db.Create(staff).Error
 }

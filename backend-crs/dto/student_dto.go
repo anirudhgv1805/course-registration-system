@@ -7,4 +7,5 @@ type StudentResponse struct {
 	Email      string `json:"email"`
 	Section    string `json:"section"`
 	Batch      int    `json:"batch"`
+	Role       string `json:"role"`
 }

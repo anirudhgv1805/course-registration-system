@@ -1,21 +1,22 @@
 import { useState } from "react";
-import { useAxiosInstance } from "../utils/axiosInstance";
 import { useAuth } from "../hooks/useAuth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Loading } from "../components/Loading";
+import { loginUser } from "../services/auth.service";
 
 const Login: React.FC = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        registerno: "",
+        userId: "",
         password: "",
     });
 
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-
-    const axiosInstance = useAxiosInstance();
-    const { login } = useAuth();
-
+    const { login, setUserData } = useAuth();
+    
     const handleChange = (e: { target: { name: any; value: any } }) => {
+        
         const { name, value } = e.target;
 
         setFormData((prev) => ({
@@ -29,22 +30,32 @@ const Login: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        setError('');
         setLoading(true);
 
         const validatedData = {
             ...formData,
-            registerno: formData.registerno.toLowerCase(),
+            userId: formData.userId.toLowerCase(),
         };
 
         try {
-            const response = await axiosInstance.post(
-                "/student/auth/login",
-                validatedData
-            );
-            const jwtToken = response?.data?.token;
-            login(jwtToken);
-        } catch (err) {
-            console.log("An error occurred while logging in : ", err);
+            const response = await loginUser(validatedData);
+            login(response?.data?.token);
+            const user = response.data.body;
+            setUserData({
+                Username: user.username,
+                userId: user.registerno ? user.registerno : user.staffId,
+                Department: user.department,
+                Email: user.email,
+                Section: user.section,
+                Batch: user.batch,
+                isClassAdvisor: user?.isClassAdvisor,
+                role : user.role,
+            })
+            if(user?.role === "student") navigate("/student/dashboard");
+            else navigate("/staff/dashboard");
+        } catch (err: any) {
+            setError(err?.message);
         } finally {
             setLoading(false);
         }
@@ -66,7 +77,7 @@ const Login: React.FC = () => {
                             type="text"
                             placeholder="Register No or Staff Id"
                             onChange={handleChange}
-                            name="registerno"
+                            name="userId"
                         />
                         <input
                             className="border border-gray-300 px-4 py-2 rounded-sm w-full"
@@ -88,17 +99,10 @@ const Login: React.FC = () => {
                         >
                             Don't have an account? Register here
                         </Link>
+                        {error && <p>{error}</p>}
                     </form>
                 </div>
-                {loading ? (
-                    <div className="absolute flex items-center bg-black z-10 opacity-50 justify-center w-full h-screen inset-0">
-                        <div className="">
-                            <h1 className="text-white font-semibold text-2xl animate-pulse">Loading...</h1>
-                        </div>
-                    </div>
-                ) : (
-                    <></>
-                )}
+                {loading && <Loading />}
             </div>
         </>
     );

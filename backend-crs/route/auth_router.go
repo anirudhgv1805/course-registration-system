@@ -15,7 +15,7 @@ func SetupAuthRouter(authController controller.AuthController, router *gin.Engin
 	}
 	staffApi := router.Group("/api/staff/auth")
 	{
-		staffApi.POST("/register", authController.RegisterStudent)
+		staffApi.POST("/register", authController.RegisterStaff)
 		staffApi.POST("/login", authController.LoginStaff)
 	}
 }

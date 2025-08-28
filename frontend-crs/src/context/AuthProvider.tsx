@@ -4,58 +4,48 @@ import { type User } from "../model/user";
 import { useAxiosInstance } from "../utils/axiosInstance";
 
 interface AuthProvividerProps {
-  children: ReactNode;
+    children: ReactNode;
 }
 
 export const AuthProvider: React.FC<AuthProvividerProps> = ({ children }) => {
-  const [jwtToken, setJwtToken] = useState<string | null>(
-    localStorage.getItem("jwtToken")
-  );
+    const [jwtToken, setJwtToken] = useState<string | null>(
+        localStorage.getItem("jwtToken")
+    );
 
-  const [user, setUser] = useState<User | undefined>(undefined);
+    const [user, setUser] = useState<User | undefined>(undefined);
+    const [error, setError] = useState<string | null>("");
 
-  const axiosInstance = useAxiosInstance();
+    const login = (jwtToken: string) => {
+        localStorage.setItem("jwtToken", jwtToken);
+        setJwtToken(jwtToken);
+    };
 
-  useEffect(() => {
-    if (jwtToken) {
-      const getUserData = async () => {
-        try {
-          const response = await axiosInstance.post("/me");
-          console.log(response?.data);
-          setUser(response?.data);
-          localStorage.setItem("user", JSON.stringify(user));
-        } catch (err: unknown) {
-          console.log("Error while hitting '/me' :", err);
-        } finally {
-        }
-      };
-      getUserData();
-    }
-  }, [jwtToken]);
+    const logout = () => {
+        localStorage.removeItem("jwtToken");
+        localStorage.removeItem("user");
+        setJwtToken(null);
+        setUser(undefined);
+    };
 
-  const login = (jwtToken: string) => {
-    localStorage.setItem("jwtToken", jwtToken);
-    setJwtToken(jwtToken);
-  };
+    const setUserData = async (user : User) => {
+        setUser(user);
+        localStorage.setItem("user", JSON.stringify(user));
+    };
 
-  const logout = () => {
-    localStorage.removeItem("jwtToken");
-    localStorage.removeItem("user");
-    setJwtToken(null);
-    setUser(undefined);
-  };
-
-  return (
-    <AuthContext.Provider
-      value={{
-        isAuthenticated: !!jwtToken,
-        jwtToken,
-        user,
-        login,
-        logout,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+    return (
+        <AuthContext.Provider
+            value={{
+                isAuthenticated: !!jwtToken,
+                jwtToken,
+                user,
+                login,
+                logout,
+                error,
+                setError,
+                setUserData,
+            }}
+        >
+            {children}
+        </AuthContext.Provider>
+    );
 };
