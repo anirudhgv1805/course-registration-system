@@ -62,7 +62,7 @@ const Login: React.FC = () => {
     };
     return (
         <>
-            <div className="relative flex items-center justify-center h-screen bg-[url('/loginbg.jpg')] bg-cover bg-center">
+            <div className="relative flex items-center justify-center h-screen bg-[url('/loginbg.jpg')] bg-cover bg-center scroll-pt-16">
                 <div className="shadow-lg rounded w-full max-w-sm p-8 select-none backdrop-blur-2xl bg-white/30">
                     <form
                         onSubmit={handleSubmit}
@@ -78,6 +78,7 @@ const Login: React.FC = () => {
                             placeholder="Register No or Staff Id"
                             onChange={handleChange}
                             name="userId"
+                            autoComplete="username"
                         />
                         <input
                             className="border border-gray-300 px-4 py-2 rounded-sm w-full"
@@ -85,6 +86,7 @@ const Login: React.FC = () => {
                             placeholder="Password"
                             onChange={handleChange}
                             name="password"
+                            autoComplete="current-password"
                         />
                         <button
                             className="bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700 transition"

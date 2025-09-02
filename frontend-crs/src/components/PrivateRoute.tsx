@@ -1,11 +1,14 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { Loading } from "./Loading";
 
 interface Props {
     children: React.ReactNode;
 }
 const PrivateRoute: React.FC<Props> = ({ children }) => {
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, loading } = useAuth();
+
+    if (loading) return <Loading />;
 
     if (!isAuthenticated) {
         return <Navigate to={"/"} replace />;
@@ -15,17 +18,18 @@ const PrivateRoute: React.FC<Props> = ({ children }) => {
 };
 
 const StudentPrivateRoute: React.FC<Props> = ({ children }) => {
-    const { isAuthenticated, user } = useAuth();
+    const { isAuthenticated, user, loading } = useAuth();
+    if (loading) return <Loading />;
 
     if (!isAuthenticated || user?.role !== "student") {
-        console.log("triggered private route student");
         return <Navigate to={"/"} replace />;
     }
     return <>{children}</>;
 };
 
 const StaffPrivateRoute: React.FC<Props> = ({ children }) => {
-    const { isAuthenticated, user } = useAuth();
+    const { isAuthenticated, user, loading } = useAuth();
+    if (loading) return <Loading />;
 
     if (!isAuthenticated || user?.role !== "staff") {
         return <Navigate to={"/"} replace />;

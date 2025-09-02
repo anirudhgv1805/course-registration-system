@@ -19,3 +19,11 @@ func SetupAuthRouter(authController controller.AuthController, router *gin.Engin
 		staffApi.POST("/login", authController.LoginStaff)
 	}
 }
+
+func SetupTempRouter(tempController controller.TempController, router *gin.Engine) {
+
+	tempApi := router.Group("/api/temp")
+	{
+		tempApi.GET("/verify", tempController.VerifyToken)
+	}
+}

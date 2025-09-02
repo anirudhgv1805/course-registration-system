@@ -2,6 +2,7 @@ package util
 
 import (
 	"backend-crs/config"
+	"errors"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -9,29 +10,45 @@ import (
 
 var secretKey = []byte(config.GetSecretKey())
 
-
-func ValidateJwtToken(jwtToken string) (string, error) {
-
-	token, err := jwt.Parse(jwtToken, func(token *jwt.Token) (interface{}, error ) {
-		return token, nil
+func ValidateJwtToken(jwtToken string) (map[string]string, error) {
+	token, err := jwt.Parse(jwtToken, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("unexpected signing method")
+		}
+		return secretKey, nil
 	})
 
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		registerNo, ok := claims["register_no"].(string)
-		if !ok {
-			return "",jwt.ErrInvalidKey
-		}
-		return registerNo, nil
+	if err != nil {
+		return nil, err
 	}
-	
-	return "", err
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || !token.Valid {
+		return nil, errors.New("invalid token")
+	}
+
+	userId, ok1 := claims["userId"].(string)
+	if !ok1 {
+		return nil, errors.New("userId claim not found or not a string")
+	}
+
+	role, ok2 := claims["role"].(string)
+	if !ok2 {
+		return nil, errors.New("role claim not found or not a string")
+	}
+
+	return map[string]string{
+		"userId": userId,
+		"role":   role,
+	}, nil
 }
 
-func GenerateJwtToken(registerNo string, role string) (string, error) {
+func GenerateJwtToken(userId string, role string) (string, error) {
 
 	claims := jwt.MapClaims{
-		"register_no": registerNo ,
-		"exp" : time.Now().Add(24 * time.Hour).Unix(),
+		"userId": userId,
+		"role":   role,
+		"exp":    time.Now().Add(24 * time.Hour).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(secretKey)

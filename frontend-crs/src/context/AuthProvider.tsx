@@ -14,6 +14,22 @@ export const AuthProvider: React.FC<AuthProvividerProps> = ({ children }) => {
 
     const [user, setUser] = useState<User | undefined>(undefined);
     const [error, setError] = useState<string | null>("");
+    const [loading, setLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            try {
+                const parsedUser = JSON.parse(storedUser) as User;
+                setUser(parsedUser);
+            } catch (err) {
+                console.error("Failed to parse user from localStorage", err);
+                localStorage.removeItem("user");
+            }
+        }
+        setJwtToken(localStorage.getItem("jwtToken"));
+        setLoading(false);
+    }, []);
 
     const login = (jwtToken: string) => {
         localStorage.setItem("jwtToken", jwtToken);
@@ -27,7 +43,7 @@ export const AuthProvider: React.FC<AuthProvividerProps> = ({ children }) => {
         setUser(undefined);
     };
 
-    const setUserData = async (user : User) => {
+    const setUserData = async (user: User) => {
         setUser(user);
         localStorage.setItem("user", JSON.stringify(user));
     };
@@ -43,6 +59,7 @@ export const AuthProvider: React.FC<AuthProvividerProps> = ({ children }) => {
                 error,
                 setError,
                 setUserData,
+                loading,
             }}
         >
             {children}

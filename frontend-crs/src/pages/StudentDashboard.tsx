@@ -1,9 +1,14 @@
-export const StudentDashboard: React.FC = () => {
+import { useAuth } from "../hooks/useAuth";
+
+export const StudentDashboard : React.FC = () => {
+    const { user } = useAuth();
+
     return (
         <>
-            <h1 className="flex items-center justify-center h-screen text-6xl">
-                welcome to student dashboard
-            </h1>
+            <div className="pt-16 bg-[#262626] h-screen">
+                <h1>hello</h1>
+                <h1>Welcome, {user?.Username}</h1>
+            </div>
         </>
     );
 };

@@ -2,15 +2,12 @@ import type { LoginDTO } from "../model/auth.dto";
 import { axiosInstance } from "../utils/axiosInstance";
 
 const loginUser = async (payload: LoginDTO) => {
-    console.log("Logging in");
     try {
         const role = extractRoleFromUserId(payload.userId);
-        console.log("role is" + role);
         const response = await axiosInstance.post(
             `/${role}/auth/login`,
             payload
         );
-        console.log(response);
         return response;
     } catch (err: any) {
         throw new Error(err.response?.data?.error || "Invalid Password");

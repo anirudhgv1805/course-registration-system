@@ -17,24 +17,24 @@ import (
 )
 
 func NewRouter() *gin.Engine {
-    router := gin.New()
-    router.Use(middleware.AddCorsMapping())
-    return router
+	router := gin.New()
+	router.Use(middleware.AddCorsMapping())
+	return router
 }
 
 func NewDatabase(lc fx.Lifecycle) (*gorm.DB, error) {
-	
-	db, err := config.ConnectDatabase();
+
+	db, err := config.ConnectDatabase()
 	if err != nil {
-		panic("Failed to commect to the Database "+err.Error())
+		panic("Failed to commect to the Database " + err.Error())
 	}
-	db.AutoMigrate(&model.Staff{},&model.Student{},&model.Admin{})
+	db.AutoMigrate(&model.Staff{}, &model.Student{}, &model.Admin{})
 
 	lc.Append(fx.Hook{
 		OnStop: func(ctx context.Context) error {
 			postgresDB, _ := db.DB()
 			postgresDB.Close()
-			return err 
+			return err
 		},
 	})
 	return db, nil
@@ -61,7 +61,8 @@ var Module = fx.Module("Application Entry", fx.Provide(
 
 	//controllers
 	controller.NewAuthController,
-
+	controller.NewTempController,
 ), fx.Invoke(
 	route.SetupAuthRouter,
+	route.SetupTempRouter,
 	StartServer))

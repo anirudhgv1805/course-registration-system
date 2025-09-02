@@ -8,10 +8,12 @@ import {
 } from "./components/PrivateRoute";
 import { StudentDashboard } from "./pages/StudentDashboard";
 import { StaffDashboard } from "./pages/StaffDashboard";
+import { Header } from "./components/Header";
 
 const App: React.FC = () => {
     return (
         <BrowserRouter>
+            <Header />
             <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/register" element={<Register />} />
@@ -24,7 +26,7 @@ const App: React.FC = () => {
                 <Route
                     path="/staff/dashboard"
                     element={
-                        <StaffPrivateRoute children={ <StaffDashboard />} />
+                        <StaffPrivateRoute children={<StaffDashboard />} />
                     }
                 />
             </Routes>
