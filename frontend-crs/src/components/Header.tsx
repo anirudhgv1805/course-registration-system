@@ -16,7 +16,7 @@ export const Header: React.FC = () => {
     };
 
     return isAuthenticated ? (
-        <header className="flex p-3 w-full justify-around items-center font-thin fixed z-10 backdrop:blur-2xl text-2xl text-white select-none">
+        <header className="flex p-3 w-full justify-around items-center font-thin fixed z-10 backdrop:blur-2xl md:text-2xl text-white select-none">
             <div className="flex relative ml-auto gap-8">
                 <div>Home</div>
                 <div>Course Available</div>

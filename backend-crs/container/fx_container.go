@@ -28,7 +28,7 @@ func NewDatabase(lc fx.Lifecycle) (*gorm.DB, error) {
 	if err != nil {
 		panic("Failed to commect to the Database " + err.Error())
 	}
-	db.AutoMigrate(&model.Staff{}, &model.Student{}, &model.Admin{})
+	db.AutoMigrate(&model.Staff{}, &model.Student{}, &model.Admin{}, &model.Course{}, &model.CourseOffering{}, &model.Department{})
 
 	lc.Append(fx.Hook{
 		OnStop: func(ctx context.Context) error {
@@ -54,15 +54,19 @@ var Module = fx.Module("Application Entry", fx.Provide(
 	// repositories
 	repository.NewStudentRepository,
 	repository.NewStaffRepository,
+	repository.NewCourseRepository,
 
 	// services
 	service.NewStudentService,
 	service.NewStaffService,
+	service.NewCourseService,
 
 	//controllers
 	controller.NewAuthController,
 	controller.NewTempController,
+	controller.NewCourseController,
 ), fx.Invoke(
 	route.SetupAuthRouter,
 	route.SetupTempRouter,
+	route.SetupCourseRouter,
 	StartServer))

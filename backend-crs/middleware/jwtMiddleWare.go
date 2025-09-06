@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"backend-crs/util"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -20,7 +21,7 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 		}
 
 		jwtToken := strings.TrimPrefix(authHeader, "Bearer ")
-		registerNo, err := util.ValidateJwtToken(jwtToken)
+		userData, err := util.ValidateJwtToken(jwtToken)
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"status": "failed",
@@ -29,7 +30,9 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		ctx.Set("registerNo", registerNo)
+		ctx.Set("userId", userData["userId"])
+		ctx.Set("role", userData["role"])
+		fmt.Println("User data that is trying to access the resource ", userData)
 		ctx.Next()
 	}
 }
