@@ -1,33 +1,37 @@
+// @title Course Registration System API
+// @version 1.0
+// @description This is the backend built with go for the course registration system
+
+// @host      localhost:8080
+// @BasePath  /
+
+// @schemes http
+
 package main
 
 import (
 	"backend-crs/config"
-	"backend-crs/models"
-	"net/http"
+	"backend-crs/container"
 
-	"github.com/gin-gonic/gin"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"go.uber.org/fx"
 )
 
 func main() {
 	config.LoadEnv()
 
-	db, err := gorm.Open(postgres.Open(config.GetDBURI()), &gorm.Config{})
-	if err != nil {
-		panic("Failed to connect to the database " + err.Error())
-	}
+	// router := gin.Default()
 
-	db.AutoMigrate(&models.Student{}, &models.Admin{})
+	// router.GET("/me", func(ctx *gin.Context) {
+	// 	ctx.JSON(http.StatusOK, "The backend is working")
+	// })
 
-	router := gin.Default()
-	
-	router.GET("/me", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, "The backend is working")
-	})
-	router.GET("/favicon.ico",func(ctx *gin.Context){
-		ctx.File("./public/favicon.ico")
-	})
-	
-	router.Run(":8080")
+	// router.GET("/favicon.ico", func(ctx *gin.Context) {
+	// 	ctx.File("./public/favicon.ico")
+	// })
+
+	// docs.SwaggerInfo.BasePath = "/"
+	// router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	fx.New(container.Module).Run()
+
 }

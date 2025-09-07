@@ -1,0 +1,11 @@
+basePath: /
+host: localhost:8080
+info:
+  contact: {}
+  description: This is the backend built with go for the course registration system
+  title: Course Registration System API
+  version: "1.0"
+paths: {}
+schemes:
+- http
+swagger: "2.0"
