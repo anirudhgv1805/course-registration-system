@@ -28,7 +28,7 @@ func NewDatabase(lc fx.Lifecycle) (*gorm.DB, error) {
 	if err != nil {
 		panic("Failed to commect to the Database " + err.Error())
 	}
-	db.AutoMigrate(&model.Staff{}, &model.Student{}, &model.Admin{}, &model.Course{}, &model.CourseOffering{}, &model.Department{})
+	db.AutoMigrate(&model.Staff{}, &model.Student{}, &model.Admin{}, &model.Course{}, &model.CourseOffering{}, &model.Department{}, &model.CourseApplicable{})
 
 	lc.Append(fx.Hook{
 		OnStop: func(ctx context.Context) error {

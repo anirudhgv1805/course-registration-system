@@ -12,7 +12,7 @@ type CourseRepository interface {
 	DeleteCourse(course *model.Course) error
 	FindCourseByCourseCode(courseId string) (*model.Course, error)
 	FindCourseByDepartment(department string) (*model.Course, error)
-	GetAllCourse() ([]model.Course, error)
+	GetAllCourses() ([]model.Course, error)
 }
 
 type courseRepository struct {
@@ -42,7 +42,7 @@ func (c *courseRepository) FindCourseByDepartment(department string) (*model.Cou
 	return &course, err
 }
 
-func (c *courseRepository) UpdateCourseDetails(courseId int, updatedData map[string]interface{}) error {
+func (c *courseRepository) UpdateCourseDetails(courseId int, updatedData map[string]any) error {
 	var course model.Course
 	err := c.db.Where("ID = ?", courseId).First(&course).Error
 	if err != nil {
@@ -51,9 +51,9 @@ func (c *courseRepository) UpdateCourseDetails(courseId int, updatedData map[str
 	return nil
 }
 
-func (c *courseRepository) GetAllCourse() ([]model.Course, error) {
+func (c *courseRepository) GetAllCourses() ([]model.Course, error) {
 	var courses []model.Course
-	if err := c.db.Find(&courses).Error; err != nil {
+	if err := c.db.Preload("HandledByStaff").Preload("OfferedBy").Find(&courses).Error; err != nil {
 		return nil, err
 	}
 	return courses, nil

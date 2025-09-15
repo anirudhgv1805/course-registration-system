@@ -7,4 +7,6 @@ type Department struct {
 	Name  string `gorm:"unique" json:"name"`
 	Code  string `json:"code"`
 	Block string `json:"block"`
+
+	ApplicableCourses []CourseApplicable `gorm:"foreignKey:DepartmentID"`
 }

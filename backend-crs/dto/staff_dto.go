@@ -7,6 +7,6 @@ type StaffResponse struct {
 	Email          string `json:"email"`
 	IsClassAdvisor bool   `json:"isClassAdvisor"`
 	Section        string `json:"section"`
-	Batch          int `json:"batch"`
+	Batch          int    `json:"batch"`
 	Role           string `json:"role"`
 }
