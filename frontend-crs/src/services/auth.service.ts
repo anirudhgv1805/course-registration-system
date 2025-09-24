@@ -1,4 +1,6 @@
 import type { LoginDTO } from "../model/auth.dto";
+import type { Department } from "../model/course";
+import type { StaffFormData } from "../model/user";
 import { axiosInstance } from "../utils/axiosInstance";
 
 const loginUser = async (payload: LoginDTO) => {
@@ -10,26 +12,55 @@ const loginUser = async (payload: LoginDTO) => {
         );
         return response;
     } catch (err: any) {
-        throw new Error(err.response?.data?.error || "Invalid Password");
+        throw new Error(
+            err.response?.data?.error || "Invalid UserId or Password"
+        );
     }
 };
 
-export { loginUser };
+const registerStaff = async (payload: StaffFormData) => {
+    try {
+        const response = await axiosInstance.post(
+            `/staff/auth/register`,
+            payload
+        );
+        return response;
+    } catch (err: any) {
+        throw new Error(
+            err.response?.data?.message || "unable to register staff"
+        );
+    }
+};
+
+const getListOfDepartments = async (): Promise<Department[]> => {
+    try {
+        const response = await axiosInstance.get("/departments");
+        return response.data?.departments;
+    } catch (err: any) {
+        throw new Error(
+            err.response?.data?.message ||
+                "cannot fetch the list of departments"
+        );
+    }
+};
+
+export { loginUser, getListOfDepartments, registerStaff };
+
+// helpers
 
 function extractRoleFromUserId(userId: string): "staff" | "student" {
-    const match = userId.match(/\d+([a-zA-Z]+)\d+/);
-    const role = match?.[1];
+    const match = userId.match(/\d+([a-zA-Z]{3})\d+/);
+    const code = match?.[1];
 
-    if (!role) {
+    if (!code) {
         throw new Error("Entered userId is wrong");
     }
 
-    switch (role.length) {
-        case 2:
-            return "staff";
-        case 3:
-            return "student";
-        default:
-            throw new Error("Entered userId is wrong");
+    const lastChar = code.charAt(2).toLowerCase();
+
+    if (lastChar === "l" || lastChar === "r") {
+        return "student";
     }
+
+    return "staff";
 }

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
+import { Link } from "react-router-dom";
 
 export const Header: React.FC = () => {
     const { isAuthenticated, logout } = useAuth();
@@ -19,7 +20,9 @@ export const Header: React.FC = () => {
         <header className="flex p-3 w-full justify-around items-center font-thin fixed z-10 backdrop:blur-2xl md:text-2xl text-white select-none">
             <div className="flex relative ml-auto gap-8">
                 <div>Home</div>
-                <div>Course Available</div>
+                <Link to={"student/course-registration"}>
+                    Course Available
+                </Link>
                 <div>Registered Courses</div>
             </div>
             <div

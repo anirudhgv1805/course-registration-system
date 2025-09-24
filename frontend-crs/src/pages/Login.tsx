@@ -14,9 +14,8 @@ const Login: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const { login, setUserData } = useAuth();
-    
+
     const handleChange = (e: { target: { name: any; value: any } }) => {
-        
         const { name, value } = e.target;
 
         setFormData((prev) => ({
@@ -30,7 +29,7 @@ const Login: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        setError('');
+        setError("");
         setLoading(true);
 
         const validatedData = {
@@ -50,9 +49,9 @@ const Login: React.FC = () => {
                 Section: user.section,
                 Batch: user.batch,
                 isClassAdvisor: user?.isClassAdvisor,
-                role : user.role,
-            })
-            if(user?.role === "student") navigate("/student/dashboard");
+                role: user.role,
+            });
+            if (user?.role === "student") navigate("/student/dashboard");
             else navigate("/staff/dashboard");
         } catch (err: any) {
             setError(err?.message);
