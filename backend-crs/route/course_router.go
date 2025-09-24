@@ -13,7 +13,7 @@ func SetupCourseRouter(courseController controller.CourseController, router *gin
 	studentCourseApi.Use(middleware.JWTAuthMiddleware())
 	studentCourseApi.Use(middleware.AuthorizeRoles("student"))
 	{
-		studentCourseApi.GET("/", middleware.AuthorizeRoles("student"), courseController.GetAllCourses)
+		studentCourseApi.GET("/", courseController.GetAllCourses)
 		studentCourseApi.POST("/block", courseController.BlockCourse)
 		studentCourseApi.POST("/apply", courseController.ApplyCourse)
 	}

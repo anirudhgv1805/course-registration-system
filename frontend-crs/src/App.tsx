@@ -5,9 +5,9 @@ import { StaffLayout } from "./layout/StaffLayout";
 import { StudentLayout } from "./layout/StudentLayout";
 import { CourseRegistration } from "./pages/CourseRegistration";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
 import { StaffDashboard } from "./pages/StaffDashboard";
 import { StudentDashboard } from "./pages/StudentDashboard";
+import { StaffRegistration } from "./pages/StaffRegistration";
 
 const App: React.FC = () => {
     return (
@@ -15,7 +15,11 @@ const App: React.FC = () => {
             <Header />
             <Routes>
                 <Route path="/" element={<Login />} />
-                <Route path="/register" element={<Register />} />
+                <Route path="/staff-register" element={<StaffRegistration />} />
+                {/* <Route
+                    path="/student-register"
+                    element={<StudentRegistration />}
+                /> */}
                 <Route path="/student" element={<StudentLayout />}>
                     <Route path="dashboard" element={<StudentDashboard />} />
                     <Route

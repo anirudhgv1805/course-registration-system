@@ -14,6 +14,8 @@ require (
 	gorm.io/gorm v1.30.1
 )
 
+require github.com/gorilla/websocket v1.5.3 // indirect
+
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/bytedance/sonic v1.14.0 // indirect

@@ -13,6 +13,7 @@ type UpdateDepartment struct {
 }
 
 type DepartmentResponse struct {
+	ID                uint                  `json:"id"`
 	Name              string                `json:"name"`
 	Code              string                `json:"code"`
 	Block             string                `json:"block"`

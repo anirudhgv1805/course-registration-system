@@ -20,10 +20,11 @@ export interface Course {
 }
 
 export interface Department {
+    id: number;
     name: string;
     code: string;
     block: string;
-    ApplicableCourses: any | null; 
+    ApplicableCourses: any | null;
 }
 
 export interface Staff {

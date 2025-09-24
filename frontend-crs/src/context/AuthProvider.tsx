@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { AuthContext } from "./AuthContext";
+import { AuthContext } from "./authContext";
 import { type User } from "../model/user";
-import { useAxiosInstance } from "../utils/axiosInstance";
+// import { useAxiosInstance } from "../utils/axiosInstance";
 
 interface AuthProvividerProps {
     children: ReactNode;

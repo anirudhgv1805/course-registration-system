@@ -55,18 +55,22 @@ var Module = fx.Module("Application Entry", fx.Provide(
 	repository.NewStudentRepository,
 	repository.NewStaffRepository,
 	repository.NewCourseRepository,
+	repository.NewDepartmentRepository,
 
 	// services
 	service.NewStudentService,
 	service.NewStaffService,
 	service.NewCourseService,
+	service.NewDepartmentService,
 
 	//controllers
 	controller.NewAuthController,
 	controller.NewTempController,
 	controller.NewCourseController,
+	controller.NewDepartmentController,
 ), fx.Invoke(
 	route.SetupAuthRouter,
 	route.SetupTempRouter,
 	route.SetupCourseRouter,
+	route.SetupDepartmentRouter,
 	StartServer))
