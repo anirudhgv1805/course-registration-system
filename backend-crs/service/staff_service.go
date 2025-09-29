@@ -2,6 +2,7 @@ package service
 
 import (
 	"backend-crs/dto"
+	"backend-crs/mapper"
 	"backend-crs/model"
 	"backend-crs/repository"
 	"backend-crs/util"
@@ -40,16 +41,19 @@ func (s *staffService) Authenticate(staffId, password string) (*dto.StaffRespons
 		return nil, errors.New("invalid password")
 	}
 
-	return &dto.StaffResponse{
+	staffResponse := &dto.StaffResponse{
 		Username:       staff.Username,
-		Department:     staff.Department,
 		Email:          staff.Email,
 		IsClassAdvisor: staff.IsClassAdvisor,
 		Section:        staff.Section,
 		Batch:          staff.Batch,
 		Role:           "staff",
 		StaffId:        staff.StaffId,
-	}, nil
+	}
+
+	mapper.DepartmentToDepartmentResponseForListOfDepartments(&staff.Department, &staffResponse.Department)
+
+	return staffResponse, nil
 }
 
 func (s *staffService) RegisterStaff(staff *model.Staff) (*dto.StaffResponse, error) {
@@ -71,13 +75,12 @@ func (s *staffService) RegisterStaff(staff *model.Staff) (*dto.StaffResponse, er
 	staffResponse := dto.StaffResponse{
 		Username:       staff.Username,
 		StaffId:        staff.StaffId,
-		Department:     staff.Department,
 		Email:          staff.Email,
 		Section:        staff.Section,
 		Batch:          staff.Batch,
 		IsClassAdvisor: staff.IsClassAdvisor,
 		Role:           "staff",
 	}
-
+	mapper.DepartmentToDepartmentResponse(&staff.Department, &staffResponse.Department)
 	return &staffResponse, nil
 }

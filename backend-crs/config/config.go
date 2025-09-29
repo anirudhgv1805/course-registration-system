@@ -12,6 +12,10 @@ import (
 )
 
 func LoadEnv() {
+	if _, exists := os.LookupEnv("RENDER"); exists {
+		fmt.Println("Running on Render – skipping .env loading")
+		return
+	}
 	rootPath, err := filepath.Abs(".")
 	if err != nil {
 		panic("Cannot find the project root : " + err.Error())
@@ -51,5 +55,5 @@ func ConnectDatabase() (*gorm.DB, error) {
 }
 
 func GetSecretKey() string {
-	return os.Getenv("JWT_SECRET_KEY");
+	return os.Getenv("JWT_SECRET_KEY")
 }

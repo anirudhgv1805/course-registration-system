@@ -6,7 +6,7 @@ export interface User {
     Section: string | null;
     Batch: number;
     isClassAdvisor: boolean;
-    role : string;
+    role: string;
 }
 
 export interface StaffFormData {
@@ -18,4 +18,14 @@ export interface StaffFormData {
     email: string;
     isClassAdvisor: boolean;
     section: string;
+}
+
+export interface StudentFormData {
+    username: string;
+    password: string;
+    registerno: string;
+    email: string;
+    section: string;
+    batch: number;
+    departmentId: number;
 }

@@ -1,6 +1,6 @@
 import type { LoginDTO } from "../model/auth.dto";
 import type { Department } from "../model/course";
-import type { StaffFormData } from "../model/user";
+import type { StaffFormData, StudentFormData } from "../model/user";
 import { axiosInstance } from "../utils/axiosInstance";
 
 const loginUser = async (payload: LoginDTO) => {
@@ -32,6 +32,20 @@ const registerStaff = async (payload: StaffFormData) => {
     }
 };
 
+const registerStudent = async (payload: StudentFormData) => {
+    try {
+        const response = await axiosInstance.post(
+            `/student/auth/register`,
+            payload
+        );
+        return response;
+    } catch (err: any) {
+        throw new Error(
+            err.response?.data?.message || "unable to register student"
+        );
+    }
+};
+
 const getListOfDepartments = async (): Promise<Department[]> => {
     try {
         const response = await axiosInstance.get("/departments");
@@ -44,7 +58,7 @@ const getListOfDepartments = async (): Promise<Department[]> => {
     }
 };
 
-export { loginUser, getListOfDepartments, registerStaff };
+export { loginUser, getListOfDepartments, registerStaff, registerStudent };
 
 // helpers
 

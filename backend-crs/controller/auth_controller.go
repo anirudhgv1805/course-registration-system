@@ -27,8 +27,8 @@ func NewAuthController(studentService service.StudentService, staffService servi
 }
 
 func (ctrl *authController) RegisterStudent(ctx *gin.Context) {
-	var student model.Student
-	if err := ctx.ShouldBindJSON(&student); err != nil {
+	var registerStudent dto.RegisterStudentDTO
+	if err := ctx.ShouldBindJSON(&registerStudent); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"status": "failed",
 			"error":  "Invalid Register Request",
@@ -36,7 +36,7 @@ func (ctrl *authController) RegisterStudent(ctx *gin.Context) {
 		return
 	}
 
-	registeredStudent, err := ctrl.studentService.RegisterStudent(&student)
+	registeredStudent, err := ctrl.studentService.RegisterStudent(&registerStudent)
 	if err != nil {
 		ctx.JSON(http.StatusConflict, gin.H{
 			"error":  err.Error(),

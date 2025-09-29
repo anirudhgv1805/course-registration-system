@@ -25,6 +25,6 @@ func (r *studentRepository) RegisterStudent(student *model.Student) error {
 
 func (r *studentRepository) FindStudentByRegisterNo(registerNo string) (*model.Student, error) {
 	var student model.Student
-	err := r.db.Where("register_no = ?", registerNo).First(&student).Error
+	err := r.db.Preload("Department").Where("register_no = ?", registerNo).First(&student).Error
 	return &student, err
 }

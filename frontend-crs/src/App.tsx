@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import { StaffDashboard } from "./pages/StaffDashboard";
 import { StudentDashboard } from "./pages/StudentDashboard";
 import { StaffRegistration } from "./pages/StaffRegistration";
+import { StudentRegistration } from "./pages/StudentRegistration";
 
 const App: React.FC = () => {
     return (
@@ -16,10 +17,10 @@ const App: React.FC = () => {
             <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/staff-register" element={<StaffRegistration />} />
-                {/* <Route
+                <Route
                     path="/student-register"
                     element={<StudentRegistration />}
-                /> */}
+                />
                 <Route path="/student" element={<StudentLayout />}>
                     <Route path="dashboard" element={<StudentDashboard />} />
                     <Route

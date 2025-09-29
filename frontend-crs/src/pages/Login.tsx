@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
 import { Loading } from "../components/Loading";
 import { loginUser } from "../services/auth.service";
+import SelectRegisterUserType from "../components/SelectRegisterUserType";
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
@@ -14,6 +15,8 @@ const Login: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const { login, setUserData } = useAuth();
+    const [selectUserRegisterType, setSelectUserRegisterType] =
+        useState<boolean>(false);
 
     const handleChange = (e: { target: { name: any; value: any } }) => {
         const { name, value } = e.target;
@@ -94,16 +97,17 @@ const Login: React.FC = () => {
                             Login
                         </button>
 
-                        <Link
-                            to="/register"
-                            className="underline text-blue-100 text-sm"
+                        {error && <p className="text-red-300">{error}</p>}
+                        <div
+                            className="underline text-blue-100 text-sm cursor-pointer"
+                            onClick={() => setSelectUserRegisterType(true)}
                         >
                             Don't have an account? Register here
-                        </Link>
-                        {error && <p>{error}</p>}
+                        </div>
                     </form>
                 </div>
                 {loading && <Loading />}
+                {selectUserRegisterType && <SelectRegisterUserType setSelectUserRegisterType={setSelectUserRegisterType}/>}
             </div>
         </>
     );

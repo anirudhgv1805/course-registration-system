@@ -23,7 +23,16 @@ func CourseToCourseResponseDTO(course *model.Course, courseDTO *dto.CourseRespon
 	// Mapping the handledByStaff to StaffResponse
 	courseDTO.HandledByStaff.Username = course.HandledByStaff.Username
 	courseDTO.HandledByStaff.StaffId = course.HandledByStaff.StaffId
-	courseDTO.HandledByStaff.Department = course.HandledByStaff.Department
+
+	// Department to DepartmentResponse
+	courseDTO.HandledByStaff.Department.ID = course.HandledByStaff.Department.ID
+	courseDTO.HandledByStaff.Department.Name = course.HandledByStaff.Department.Name
+	courseDTO.HandledByStaff.Department.Block = course.HandledByStaff.Department.Block
+	courseDTO.HandledByStaff.Department.Code = course.HandledByStaff.Department.Code
+
+	// CourseApplicable to CourseApplicableDTO
+	// courseDTO.HandledByStaff.Department.ApplicableCourses = course.HandledByStaff.Department.ApplicableCourses
+
 	courseDTO.HandledByStaff.Email = course.HandledByStaff.Email
 	courseDTO.HandledByStaff.IsClassAdvisor = course.HandledByStaff.IsClassAdvisor
 	courseDTO.HandledByStaff.Section = course.HandledByStaff.Section
