@@ -13,7 +13,7 @@ import (
 
 func LoadEnv() {
 	if _, exists := os.LookupEnv("RENDER"); exists {
-		fmt.Println("Running on Render – skipping .env loading")
+		fmt.Println("Running on Render - skipping .env loading")
 		return
 	}
 	rootPath, err := filepath.Abs(".")
@@ -30,12 +30,13 @@ func LoadEnv() {
 
 func GetDBURI() string {
 	return fmt.Sprintf(
-		"host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
+		"host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_PORT"),
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_NAME"),
 		os.Getenv("DB_PASSWORD"),
+		os.Getenv("SSL_MODE"),
 	)
 }
 
