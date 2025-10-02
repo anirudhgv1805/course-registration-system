@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { useAuth } from "../hooks/useAuth";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Loading } from "../components/Loading";
-import { loginUser } from "../services/auth.service";
 import SelectRegisterUserType from "../components/SelectRegisterUserType";
+import { useAuth } from "../hooks/useAuth";
+import { loginUser } from "../services/auth.service";
 
 const Login: React.FC = () => {
     const navigate = useNavigate();

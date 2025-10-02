@@ -67,20 +67,20 @@ func (s *staffService) RegisterStaff(staff *model.Staff) (*dto.StaffResponse, er
 	}
 	staff.Password = hashedPassword
 
-	err = s.repo.RegisterStaff(staff)
+	savedStaff, err := s.repo.RegisterStaff(staff)
 	if err != nil {
 		return nil, err
 	}
 
 	staffResponse := dto.StaffResponse{
-		Username:       staff.Username,
-		StaffId:        staff.StaffId,
-		Email:          staff.Email,
-		Section:        staff.Section,
-		Batch:          staff.Batch,
-		IsClassAdvisor: staff.IsClassAdvisor,
+		Username:       savedStaff.Username,
+		StaffId:        savedStaff.StaffId,
+		Email:          savedStaff.Email,
+		Section:        savedStaff.Section,
+		Batch:          savedStaff.Batch,
+		IsClassAdvisor: savedStaff.IsClassAdvisor,
 		Role:           "staff",
 	}
-	mapper.DepartmentToDepartmentResponse(&staff.Department, &staffResponse.Department)
+	mapper.DepartmentToDepartmentResponse(&savedStaff.Department, &staffResponse.Department)
 	return &staffResponse, nil
 }

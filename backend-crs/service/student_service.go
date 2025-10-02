@@ -13,7 +13,7 @@ var ErrorUserAlreadyExists = errors.New("the user trying to register is already 
 
 type StudentService interface {
 	RegisterStudent(registerStudent *dto.RegisterStudentDTO) (*dto.StudentResponse, error)
-	FindStudentByRegisterNo(registerNo string) (*model.Student, error)
+	FindStudentByRegisterNo(registerNo string) (*dto.StudentResponse, error)
 	Authenticate(registerNo, password string) (*dto.StudentResponse, error)
 }
 
@@ -44,30 +44,39 @@ func (s *studentService) RegisterStudent(registerStudent *dto.RegisterStudentDTO
 		Batch:        registerStudent.Batch,
 	}
 
-	err = s.repo.RegisterStudent(&student)
+	savedStudent, err := s.repo.RegisterStudent(&student)
 	if err != nil {
 		return nil, err
 	}
 
 	studentResponse := dto.StudentResponse{
-		Username:   student.Username,
-		RegisterNo: student.RegisterNo,
-		Email:      student.Email,
-		Section:    student.Section,
-		Batch:      student.Batch,
+		Username:   savedStudent.Username,
+		RegisterNo: savedStudent.RegisterNo,
+		Email:      savedStudent.Email,
+		Section:    savedStudent.Section,
+		Batch:      savedStudent.Batch,
 		Role:       "student",
 	}
-	mapper.DepartmentToDepartmentResponseForListOfDepartments(&student.Department, &studentResponse.Department)
+	mapper.DepartmentToDepartmentResponseForListOfDepartments(&savedStudent.Department, &studentResponse.Department)
 
 	return &studentResponse, err
 }
 
-func (s *studentService) FindStudentByRegisterNo(registerNo string) (*model.Student, error) {
+func (s *studentService) FindStudentByRegisterNo(registerNo string) (*dto.StudentResponse, error) {
 	student, err := s.repo.FindStudentByRegisterNo(registerNo)
 	if err != nil {
 		return nil, err
 	}
-	return student, err
+	studentResponse := &dto.StudentResponse{
+		Username:   student.Username,
+		Email:      student.Email,
+		Batch:      student.Batch,
+		RegisterNo: student.RegisterNo,
+		Section:    student.Section,
+		Role:       "student",
+	}
+	mapper.DepartmentToDepartmentResponseForListOfDepartments(&student.Department, &studentResponse.Department)
+	return studentResponse, err
 }
 
 func (s *studentService) Authenticate(registerNo, password string) (*dto.StudentResponse, error) {
