@@ -107,7 +107,11 @@ const Login: React.FC = () => {
                     </form>
                 </div>
                 {loading && <Loading />}
-                {selectUserRegisterType && <SelectRegisterUserType setSelectUserRegisterType={setSelectUserRegisterType}/>}
+                {selectUserRegisterType && (
+                    <SelectRegisterUserType
+                        setSelectUserRegisterType={setSelectUserRegisterType}
+                    />
+                )}
             </div>
         </>
     );

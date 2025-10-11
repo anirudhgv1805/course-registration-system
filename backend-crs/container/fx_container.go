@@ -5,9 +5,11 @@ import (
 	"backend-crs/controller"
 	"backend-crs/middleware"
 	"backend-crs/model"
+	"backend-crs/redis"
 	"backend-crs/repository"
 	"backend-crs/route"
 	"backend-crs/service"
+	"backend-crs/ws"
 	"context"
 	"fmt"
 
@@ -36,6 +38,7 @@ func NewDatabase(lc fx.Lifecycle) (*gorm.DB, error) {
 		&model.Course{},
 		&model.CourseOffering{},
 		&model.Student{},
+		&model.Classroom{},
 	)
 
 	lc.Append(fx.Hook{
@@ -52,8 +55,13 @@ func StartServer(r *gin.Engine) {
 	r.Run(":8080")
 }
 
+func StartWebSocket(hub *ws.Hub) {
+	go hub.Run()
+}
+
 var Module = fx.Module("Application Entry", fx.Provide(
 	NewDatabase,
+	redis.NewRedisClient,
 
 	// router
 	NewRouter,
@@ -64,11 +72,17 @@ var Module = fx.Module("Application Entry", fx.Provide(
 	repository.NewCourseRepository,
 	repository.NewDepartmentRepository,
 
+	//redis for caching
+	redis.NewCourseCache,
+
 	// services
 	service.NewStudentService,
 	service.NewStaffService,
 	service.NewCourseService,
 	service.NewDepartmentService,
+
+	//setting up websockets
+	ws.NewHub,
 
 	//controllers
 	controller.NewAuthController,
@@ -79,5 +93,7 @@ var Module = fx.Module("Application Entry", fx.Provide(
 	route.SetupAuthRouter,
 	route.SetupTempRouter,
 	route.SetupCourseRouter,
+	route.SetupRegisterRoutes,
 	route.SetupDepartmentRouter,
+	StartWebSocket,
 	StartServer))

@@ -15,7 +15,7 @@ type CourseController interface {
 	CreateCourse(ctx *gin.Context)
 	UpdateCourseDetails(ctx *gin.Context)
 	ApplyCourse(ctx *gin.Context)
-	BlockCourse(ctx *gin.Context)
+	BlockSeat(ctx *gin.Context)
 	DeleteCourse(ctx *gin.Context)
 }
 
@@ -27,8 +27,18 @@ func NewCourseController(courseService service.CourseService) CourseController {
 	return &courseController{courseService: courseService}
 }
 
-func (c *courseController) BlockCourse(ctx *gin.Context) {
-	panic("unimplemented")
+func (cc *courseController) BlockSeat(c *gin.Context) {
+    courseID := c.Param("courseID")
+    userID := c.Query("userID")         
+    departmentID := c.Query("deptID")
+
+    err := cc.courseService.BlockSeat(c, courseID, userID, departmentID)
+    if err != nil {
+        c.JSON(http.StatusConflict, gin.H{"message": err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{"message": "Seat blocked"})
 }
 
 func (c *courseController) GetAllCourses(ctx *gin.Context) {

@@ -3,6 +3,7 @@ package route
 import (
 	"backend-crs/controller"
 	"backend-crs/middleware"
+	"backend-crs/ws"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,7 +15,7 @@ func SetupCourseRouter(courseController controller.CourseController, router *gin
 	studentCourseApi.Use(middleware.AuthorizeRoles("student"))
 	{
 		studentCourseApi.GET("/", courseController.GetAllCourses)
-		studentCourseApi.POST("/block", courseController.BlockCourse)
+		studentCourseApi.POST("/block", courseController.BlockSeat)
 		studentCourseApi.POST("/apply", courseController.ApplyCourse)
 	}
 	staffCourseApi := router.Group("/api/staff/courses")
@@ -28,4 +29,9 @@ func SetupCourseRouter(courseController controller.CourseController, router *gin
 		staffCourseApi.DELETE("/:id", courseController.DeleteCourse)
 
 	}
+}
+
+func SetupRegisterRoutes(r *gin.Engine, cc controller.CourseController, hub *ws.Hub) {
+	r.GET("/ws/course-updates", ws.ServeWS(hub))
+	r.POST("/courses/:courseID/block", cc.BlockSeat)
 }

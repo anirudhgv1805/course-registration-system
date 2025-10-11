@@ -19,7 +19,7 @@ export const CourseRegistration: React.FC = () => {
     };
 
     return (
-        <div className="bg-black pt-16 min-h-screen">
+        <div className="bg-gray-400 pt-16 min-h-screen">
             <div className="grid grid-cols-2 px-8">
                 {courses.map((course) => (
                     <CourseCard key={course.courseId} course={course} />
@@ -33,7 +33,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
     const filledPercentage =
         (course.currentlyFilled / course.totalCapacity) * 100;
     return (
-        <div className="w-full bg-white border-b border-gray-200 hover:bg-gray-50 transition-all px-4 py-3 select-none">
+        <div className="w-full bg-gray-100 border-b border-gray-200 hover:bg-gray-50 transition-all px-4 py-3 select-none border-8">
             <div className="grid md:grid-cols-[1fr_auto] items-center gap-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:gap-6">
                     <div className="text-sm font-medium text-gray-600 w-24">

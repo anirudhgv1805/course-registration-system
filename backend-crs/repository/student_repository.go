@@ -16,7 +16,7 @@ type studentRepository struct {
 }
 
 func NewStudentRepository(db *gorm.DB) StudentRepository {
-	return &studentRepository{db}
+	return &studentRepository{db: db}
 }
 
 func (r *studentRepository) RegisterStudent(student *model.Student) (*model.Student, error) {

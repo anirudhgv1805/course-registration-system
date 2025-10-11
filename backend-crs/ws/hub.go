@@ -1,40 +1,55 @@
 package ws
 
+import (
+	"encoding/json"
+	"sync"
+)
+
 type Hub struct {
-	Register   chan *Client
-	Unregister chan *Client
-	Clients    map[*Client]bool
-	Broadcast  chan []byte
+	clients    map[*Client]bool
+	register   chan *Client
+	unregister chan *Client
+	mu         sync.RWMutex
 }
 
 func NewHub() *Hub {
 	return &Hub{
-		Register:   make(chan *Client),
-		Unregister: make(chan *Client),
-		Clients:    map[*Client]bool{},
-		Broadcast:  make(chan []byte),
+		clients:    make(map[*Client]bool),
+		register:   make(chan *Client),
+		unregister: make(chan *Client),
 	}
 }
 
 func (h *Hub) Run() {
 	for {
 		select {
-		case client := <-h.Register:
-			h.Clients[client] = true
+		case client := <-h.register:
+			h.mu.Lock()
+			h.clients[client] = true
+			h.mu.Unlock()
 
-		case client := <-h.Unregister:
-			if _, ok := h.Clients[client]; ok {
-				delete(h.Clients, client)
+		case client := <-h.unregister:
+			h.mu.Lock()
+			if _, ok := h.clients[client]; ok {
+				delete(h.clients, client)
 				close(client.Send)
 			}
-		case message := <-h.Broadcast:
-			for client := range h.Clients {
-				select {
-				case client.Send <- message:
-				default:
-					close(client.Send)
-					delete(h.Clients, client)
-				}
+			h.mu.Unlock()
+		}
+	}
+}
+
+func (h *Hub) BroadcastToDepartment(departmentID string, message any) {
+	data, _ := json.Marshal(message)
+	h.mu.RLock()
+	defer h.mu.RUnlock()
+	for c := range h.clients {
+		if c.DepartmentID == departmentID {
+			select {
+			case c.Send <- data:
+			default:
+				close(c.Send)
+				delete(h.clients, c)
 			}
 		}
 	}
